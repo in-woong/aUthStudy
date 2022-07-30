@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { logOut } from '../service/auth';
 
 const Nav = () => {
   const [checked, setChecked] = useState(true);
@@ -79,7 +80,9 @@ const Nav = () => {
           </svg>
         </label>
         <button className='btn btn-ghost w-28'>My name</button>
-        <button className='btn btn-ghost w-28'>Sign out</button>
+        <button className='btn btn-ghost w-28' onClick={logOut}>
+          Sign out
+        </button>
       </div>
     </section>
   );

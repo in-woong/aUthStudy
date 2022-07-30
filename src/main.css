@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .main {
-  min-height: calc(100vh - 4rem - 75px);
+  min-height: calc(100vh - 4rem - 40px);
 }
 .footer {
   row-gap: 1rem;
