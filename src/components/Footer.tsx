@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className='footer p-10 bg-gray-100 text-gray-800 dark:text-gray-100 dark:bg-gray-900 footer-center '>
+    <footer className='footer p-5 bg-gray-100 text-gray-800 dark:text-gray-100 dark:bg-gray-900 footer-center '>
       <div>
         <div className='grid grid-flow-col gap-4'>
           <a
