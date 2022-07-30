@@ -6,6 +6,7 @@ import TodolistView from './views/TodolistView';
 
 import Login from './Login';
 import { authService } from './service/firebase';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   const $hamburger = useRef<HTMLInputElement>(null);
@@ -24,10 +25,8 @@ function App() {
 
   return (
     <div className='App'>
-      {!isLoggedin ? (
-        <Login />
-      ) : (
-        <BrowserRouter>
+      <BrowserRouter>
+        <AuthProvider>
           <input
             type='checkbox'
             id='side-menu'
@@ -43,8 +42,8 @@ function App() {
             </section>
             <Footer />
           </section>
-        </BrowserRouter>
-      )}
+        </AuthProvider>
+      </BrowserRouter>
     </div>
   );
 }
