@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as AuthService from './service/auth';
 
-const Login = () => {
+const Login = ({ onSignUp, onLogin }) => {
   const [signUp, setSignup] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -9,9 +9,9 @@ const Login = () => {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (signUp) {
-      AuthService.signUp(email, password);
+      onSignUp(email, password);
     } else {
-      AuthService.signIn(email, password);
+      onLogin(email, password);
     }
   };
 
@@ -33,31 +33,50 @@ const Login = () => {
     }
   };
   return (
-    <section>
-      <label htmlFor='form'>{signUp ? 'Sign up' : 'Sign In'}</label>
-      <form action='submit' id='form' onSubmit={onSubmit}>
-        <input
-          type='email'
-          name='email'
-          placeholder='email'
-          value={email}
-          onChange={onChange}
-        />
-        <input
-          type='password'
-          name='password'
-          placeholder='password'
-          value={password}
-          onChange={onChange}
-        />
-        <input
-          type='checkbox'
-          name='signup'
-          id='signup'
-          onChange={onChange}
-          checked={signUp}
-        />
-        <label htmlFor='signup'> Create a new account? </label>
+    <section className='w-[50%] h-[30%] p-10 mx-auto my-auto flex flex-col justify-center content-center relative bg-lime-200 rounded-3xl'>
+      <label htmlFor='form absolute '>
+        <img src='./mainTheme.png' className='w-20'></img>
+      </label>
+      <form
+        action='submit'
+        id='form'
+        onSubmit={onSubmit}
+        className='flex flex-col justify-center'
+      >
+        <div>
+          <label htmlFor='email'>Email : </label>
+          <input
+            type='email'
+            name='email'
+            placeholder='email'
+            value={email}
+            onChange={onChange}
+            className='bg-transparent'
+          />
+        </div>
+        <div>
+          <label htmlFor='password'>Password : </label>
+          <input
+            type='password'
+            name='password'
+            placeholder='password'
+            value={password}
+            onChange={onChange}
+            className='bg-transparent'
+          />
+        </div>
+
+        <div>
+          <input
+            type='checkbox'
+            name='signup'
+            id='signup'
+            onChange={onChange}
+            checked={signUp}
+          />
+          <label htmlFor='signup'> Create a new account? </label>
+        </div>
+
         <button type='submit'>{signUp ? 'Sign up' : 'Sign In'}</button>
       </form>
     </section>
