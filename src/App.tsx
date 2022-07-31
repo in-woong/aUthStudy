@@ -5,28 +5,25 @@ import Nav from './components/Nav';
 import TodolistView from './views/TodolistView';
 
 import Login from './Login';
-import { authService } from './service/firebase';
-import { AuthProvider } from './context/AuthContext';
+import me from './service/auth';
+import { getTodos } from './service/todos';
 
 function App() {
   const $hamburger = useRef<HTMLInputElement>(null);
-  const [isLoggedin, setIsLoggedIn] = useState(false);
+  const [isLoggedin, setIsLoggedIn] = useState('');
 
   useEffect(() => {
     //웹 실행 시 최초 1회 해당 함수를 실행시켜 이전 로그인 기록이 있다면 불러옴
-    authService.onAuthStateChanged((user) => {
-      if (user) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-    });
+    me(setIsLoggedIn);
+    getTodos();
   }, []);
 
   return (
     <div className='App'>
-      <BrowserRouter>
-        <AuthProvider>
+      {!isLoggedin ? (
+        <Login />
+      ) : (
+        <BrowserRouter>
           <input
             type='checkbox'
             id='side-menu'
@@ -42,8 +39,8 @@ function App() {
             </section>
             <Footer />
           </section>
-        </AuthProvider>
-      </BrowserRouter>
+        </BrowserRouter>
+      )}
     </div>
   );
 }

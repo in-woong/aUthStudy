@@ -17,4 +17,4 @@ const app = initializeApp(firebaseConfig);
 
 export const authService = getAuth(app);
 export const dbService = getFirestore(app);
-export const realtimeObserve = getDatabase(app);
+export const database = getDatabase(app);

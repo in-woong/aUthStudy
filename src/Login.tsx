@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as AuthService from './service/auth';
 
-const Login = ({ onSignUp, onLogin }) => {
+const Login = () => {
   const [signUp, setSignup] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -9,9 +9,9 @@ const Login = ({ onSignUp, onLogin }) => {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (signUp) {
-      onSignUp(email, password);
+      AuthService.signUp(email, password);
     } else {
-      onLogin(email, password);
+      AuthService.signIn(email, password);
     }
   };
 
