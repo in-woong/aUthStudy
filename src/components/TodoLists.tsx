@@ -10,8 +10,6 @@ const TodoLists = (): JSX.Element => {
   const defaultImage =
     'https://images.unsplash.com/photo-1540350394557-8d14678e7f91?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80';
 
-  // const { plan, image } = todoLists;
-
   const pageNums = [1];
   // Array.from(
   //   { length: todoLists.taskDays.length },
@@ -35,11 +33,11 @@ const TodoLists = (): JSX.Element => {
       if (!todos) return;
       setTodos(todos);
     });
-    console.log(todos);
+    //TODO: 쓰로틀링이나, 디바운싱 걸어놓기
   }, [input]);
 
   return (
-    <div className='container bg-orange-200 rounded-lg dark:bg-orange-300 dark:text-gray-600 flex-col p-2'>
+    <div className='container mx-auto bg-orange-200 rounded-lg dark:bg-orange-300 dark:text-gray-600 flex-col p-2'>
       <div className='flex'>
         <section className='w-1/2 mx-auto'>
           <h2 className='text-center font-bold text-2xl'>Todolist</h2>
@@ -78,8 +76,16 @@ const TodoLists = (): JSX.Element => {
       <ul className='btn-group mx-auto my-3 w-fit h-fit'>
         {pageNums.map((num) => {
           if (num == selectedNum)
-            return <li className='btn btn-active'>{num}</li>;
-          return <li className='btn'>{num}</li>;
+            return (
+              <li key={num} className='btn btn-active'>
+                {num}
+              </li>
+            );
+          return (
+            <li key={num} className='btn'>
+              {num}
+            </li>
+          );
         })}
       </ul>
     </div>

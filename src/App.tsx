@@ -32,7 +32,7 @@ function App() {
           ></input>
           <section className='drawer-content'>
             <Nav />
-            <section className='main pt-16 mb-auto'>
+            <section className='main pt-16 mb-auto flex flex-col justify-center '>
               <Routes>
                 <Route path='/' element={<TodolistView />} />
               </Routes>

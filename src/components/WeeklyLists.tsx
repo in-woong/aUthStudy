@@ -1,4 +1,4 @@
 const WeeklyLists = () => {
-  return <h1>WeeklyLists</h1>;
+  return <p className='mx-auto'>WeeklyLists</p>;
 };
 export default WeeklyLists;
