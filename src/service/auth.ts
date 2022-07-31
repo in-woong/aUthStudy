@@ -5,6 +5,7 @@ import {
   onAuthStateChanged,
   signOut,
 } from 'firebase/auth';
+import { SetStateAction } from 'react';
 
 type email = string;
 type password = string;
@@ -38,6 +39,7 @@ export const signIn = async (email: email, password: password) => {
 };
 
 export const logOut = async () => {
+  alert('로그아웃 되었습니다.');
   await signOut(authService)
     .then(() => {
       //Sign-out successful
@@ -48,12 +50,12 @@ export const logOut = async () => {
     });
 };
 
-const me = () => {
+const me = (setIsLoggedIn: React.Dispatch<SetStateAction<string>>) => {
   onAuthStateChanged(authService, (user) => {
     if (user) {
-      const uid = user.uid;
+      setIsLoggedIn(user.uid);
     } else {
-      //User is signed Out
+      setIsLoggedIn('');
     }
   });
 };
