@@ -17,7 +17,7 @@ export const getTodos = async () => {
   );
   let todos: Todo[] = [];
   todoSnapShot.forEach((doc) => {
-    todos = [...todos, doc.data()];
+    todos = [...todos, doc.data() as Todo];
   });
   return todos;
 };
@@ -44,3 +44,5 @@ export const addTodos = async (todo: string) => {
     uuid,
   });
 };
+
+export const finishedTodo = async (uuid: string) => {};
