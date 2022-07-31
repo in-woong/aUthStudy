@@ -37,7 +37,7 @@ const TodoLists = (): JSX.Element => {
   }, [input]);
 
   return (
-    <div className='container mx-auto bg-orange-200 rounded-lg dark:bg-orange-300 dark:text-gray-600 flex-col p-2'>
+    <div className='container mx-auto lg:w-[1200px] bg-orange-200 rounded-lg dark:bg-orange-300 dark:text-gray-600 flex-col p-2'>
       <div className='flex'>
         <section className='w-1/2 mx-auto'>
           <h2 className='text-center font-bold text-2xl'>Todolist</h2>
@@ -46,20 +46,21 @@ const TodoLists = (): JSX.Element => {
               type='text'
               value={input}
               placeholder='What will you do?'
+              className='w-4/5 ml-4 pl-2 py-1 rounded-lg bg-transparent focus:outline-none border-b-2 border-orange-700'
               onChange={handleChange}
               onSubmit={handleSubmit}
             />
             <button
               type='submit'
               onClick={handleSubmit}
-              className='btn btn-ghost'
+              className='btn btn-sm btn-outline btn-warning ml-4'
             >
               Add
             </button>
           </div>
           <ul>
             {todos.map((todo: Todo) => (
-              <TodoList key={todo.uuid} taskDay={todo} />
+              <TodoList key={todo.uuid} todo={todo} />
             ))}
           </ul>
         </section>
