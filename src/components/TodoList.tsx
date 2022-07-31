@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { finishedTodo } from '../service/todos';
+import { editTodo, finishedTodo } from '../service/todos';
 import type { Todo } from '../store/todos';
 
 const TodoList = ({ todo }: { todo: Todo }) => {
   const [isDone, setIsDone] = useState(todo.finished);
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(true);
   const [input, setInput] = useState(todo.todo);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -14,16 +14,20 @@ const TodoList = ({ todo }: { todo: Todo }) => {
   const handleDone = () => {
     finishedTodo(todo.uuid, !isDone);
     setIsDone(!isDone);
-    
-    
   };
 
   const handleEdit = () => {
     if (isDone) return;
     setIsEdit(!isEdit);
   };
-  const handleSubmit = () => {};
-
+  const handleSubmit = () => {
+    editTodo(todo.uuid, input);
+    setInput(input);
+    setIsEdit(!isEdit);
+  };
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key == 'Enter') handleSubmit();
+  };
   return (
     <li
       key={todo.uuid}
@@ -31,25 +35,33 @@ const TodoList = ({ todo }: { todo: Todo }) => {
     >
       {isDone ? (
         <span className='my-auto text-red-500'>
-          <s>{todo.todo}</s>
+          <s>{input}</s>
         </span>
       ) : isEdit ? (
+        <span className='my-auto'>{input}</span>
+      ) : (
         <input
           value={input}
           onChange={handleChange}
-          onSubmit={handleSubmit}
+          onKeyDown={handleKeyDown}
           className='w-2/3 bg-transparent focus:outline-none text-gray-400'
         />
-      ) : (
-        <span className='my-auto'>{todo.todo}</span>
       )}
       <div className=''>
-        <button onClick={handleDone} className='btn btn-sm btn-ghost'>
-          Done
-        </button>
-        <button onClick={handleEdit} className='btn btn-sm btn-ghost'>
-          Edit
-        </button>
+        {isEdit ? (
+          <>
+            <button onClick={handleDone} className='btn btn-sm btn-ghost'>
+              Done
+            </button>
+            <button onClick={handleEdit} className='btn btn-sm btn-ghost'>
+              Edit
+            </button>
+          </>
+        ) : (
+          <button className='btn btn-sm mr-4 ' onClick={handleSubmit}>
+            Submit
+          </button>
+        )}
       </div>
     </li>
   );

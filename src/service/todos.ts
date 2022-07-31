@@ -65,3 +65,24 @@ export const finishedTodo = async (uuid: string, finished: boolean) => {
     { merge: true }
   );
 };
+
+export const editTodo = async (uuid: string, todo: string) => {
+  console.log('edit', uuid, todo);
+  const today = new Date();
+  const nowDate = `${today.getFullYear()}-${
+    today.getMonth() + 1
+  }-${today.getDate()}`;
+  if (!authService.currentUser) return;
+  const todoRef = doc(
+    dbService,
+    `todos/${authService.currentUser.uid}/${nowDate}`,
+    uuid
+  );
+  setDoc(
+    todoRef,
+    {
+      todo,
+    },
+    { merge: true }
+  );
+};
