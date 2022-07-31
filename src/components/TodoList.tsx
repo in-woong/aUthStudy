@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { editTodo, finishedTodo } from '../service/todos';
+import { deleteTodo, editTodo, finishedTodo } from '../service/todos';
 import type { Todo } from '../store/todos';
 
 const TodoList = ({ todo }: { todo: Todo }) => {
@@ -19,6 +19,10 @@ const TodoList = ({ todo }: { todo: Todo }) => {
   const handleEdit = () => {
     if (isDone) return;
     setIsEdit(!isEdit);
+  };
+
+  const handleDelete = () => {
+    deleteTodo(todo.uuid);
   };
   const handleSubmit = () => {
     editTodo(todo.uuid, input);
@@ -55,6 +59,9 @@ const TodoList = ({ todo }: { todo: Todo }) => {
             </button>
             <button onClick={handleEdit} className='btn btn-sm btn-ghost'>
               Edit
+            </button>
+            <button onClick={handleDelete} className='btn btn-sm btn-ghost'>
+              Del
             </button>
           </>
         ) : (
