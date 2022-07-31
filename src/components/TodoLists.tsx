@@ -37,7 +37,7 @@ const TodoLists = (): JSX.Element => {
   }, [input]);
 
   return (
-    <div className='container mx-auto lg:w-[1200px] bg-orange-200 rounded-lg dark:bg-orange-300 dark:text-gray-600 flex-col p-2'>
+    <div className='container shadow-xl mx-auto lg:w-[1200px] bg-orange-200 rounded-lg dark:bg-orange-300 dark:text-gray-600 flex-col p-2'>
       <div className='flex'>
         <section className='w-1/2 mx-auto'>
           <h2 className='text-center font-bold text-2xl'>Todolist</h2>
@@ -46,7 +46,7 @@ const TodoLists = (): JSX.Element => {
               type='text'
               value={input}
               placeholder='What will you do?'
-              className='w-4/5 ml-4 pl-2 py-1 rounded-lg bg-transparent focus:outline-none border-b-2 border-orange-700'
+              className='lg:w-4/5 w-2/3 ml-4 pl-2 py-1 rounded-lg bg-transparent focus:outline-none border-b-2 border-orange-700'
               onChange={handleChange}
               onSubmit={handleSubmit}
             />

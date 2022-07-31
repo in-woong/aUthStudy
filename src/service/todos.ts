@@ -1,5 +1,12 @@
 import { onValue, ref, set } from 'firebase/database';
-import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+} from 'firebase/firestore';
 import { uid } from 'uid';
 import { Todo } from '../store/todos';
 import { authService, dbService } from './firebase';
@@ -84,5 +91,16 @@ export const editTodo = async (uuid: string, todo: string) => {
       todo,
     },
     { merge: true }
+  );
+};
+
+export const deleteTodo = async (uuid: string) => {
+  const today = new Date();
+  const nowDate = `${today.getFullYear()}-${
+    today.getMonth() + 1
+  }-${today.getDate()}`;
+  if (!authService.currentUser) return;
+  await deleteDoc(
+    doc(dbService, `todos/${authService.currentUser.uid}/${nowDate}`, uuid)
   );
 };
