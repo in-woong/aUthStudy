@@ -33,9 +33,9 @@ const Login = () => {
     }
   };
   return (
-    <section className='w-[50%] h-[30%] p-10 mx-auto my-auto flex flex-col justify-center content-center relative bg-lime-200 rounded-3xl'>
-      <label htmlFor='form absolute '>
-        <img src='./mainTheme.png' className='w-20'></img>
+    <section className='w-[50%] h-96 min-w-fit min-h-fit p-10 py-12 mt-48 mx-auto flex flex-col justify-center content-center bg-lime-200 rounded-3xl drop-shadow-xl'>
+      <label htmlFor='form' className='mb-10 mx-auto'>
+        <img src='./mainTheme.png' className='w-32'></img>
       </label>
       <form
         action='submit'
@@ -43,7 +43,7 @@ const Login = () => {
         onSubmit={onSubmit}
         className='flex flex-col justify-center'
       >
-        <div>
+        <div className='mb-8 text-xl'>
           <label htmlFor='email'>Email : </label>
           <input
             type='email'
@@ -51,10 +51,10 @@ const Login = () => {
             placeholder='email'
             value={email}
             onChange={onChange}
-            className='bg-transparent'
+            className='bg-transparent w-1/2'
           />
         </div>
-        <div>
+        <div className='mb-10 text-xl'>
           <label htmlFor='password'>Password : </label>
           <input
             type='password'
@@ -77,7 +77,12 @@ const Login = () => {
           <label htmlFor='signup'> Create a new account? </label>
         </div>
 
-        <button type='submit'>{signUp ? 'Sign up' : 'Sign In'}</button>
+        <button
+          type='submit'
+          className='font-bold text-gray-600 text-lg hover:text-blackF'
+        >
+          {signUp ? 'Sign up' : 'Sign In'}
+        </button>
       </form>
     </section>
   );
