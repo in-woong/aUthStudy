@@ -13,7 +13,7 @@ export interface Todo {
   uuid: string;
   todo: string;
   createdAt: string;
-  finishedAt: null | string;
+  finished: boolean;
   imgURL: string;
   //taskId는 Todolists의 id와 동일
 }
