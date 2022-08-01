@@ -7,16 +7,22 @@ import TodolistView from './views/TodolistView';
 import Login from './Login';
 import me from './service/auth';
 import { getTodos } from './service/todos';
+import { useRecoilValue } from 'recoil';
+import { dateState } from './store/date';
 
 function App() {
   const $hamburger = useRef<HTMLInputElement>(null);
   const [isLoggedin, setIsLoggedIn] = useState('');
+  const date = useRecoilValue(dateState);
 
   useEffect(() => {
     //웹 실행 시 최초 1회 해당 함수를 실행시켜 이전 로그인 기록이 있다면 불러옴
     me(setIsLoggedIn);
-    getTodos();
   }, []);
+
+  useEffect(() => {
+    getTodos(date);
+  }, [date]);
 
   return (
     <div className='App'>

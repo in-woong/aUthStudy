@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
+import { useRecoilValue } from 'recoil';
 import { deleteTodo, editTodo, finishedTodo } from '../service/todos';
+import { dateState } from '../store/date';
 import type { Todo } from '../store/todos';
 
 const TodoList = ({ todo }: { todo: Todo }) => {
   const [isDone, setIsDone] = useState(todo.finished);
   const [isEdit, setIsEdit] = useState(true);
   const [input, setInput] = useState(todo.todo);
+  const date = useRecoilValue(dateState);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e.target.value);
   };
 
   const handleDone = () => {
-    finishedTodo(todo.uuid, !isDone);
+    finishedTodo(date, todo.uuid, !isDone);
     setIsDone(!isDone);
   };
 
@@ -25,7 +28,7 @@ const TodoList = ({ todo }: { todo: Todo }) => {
     deleteTodo(todo.uuid);
   };
   const handleSubmit = () => {
-    editTodo(todo.uuid, input);
+    editTodo(date, todo.uuid, input);
     setInput(input);
     setIsEdit(!isEdit);
   };
