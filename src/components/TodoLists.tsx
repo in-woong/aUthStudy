@@ -1,18 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { addTodos, getTodos } from '../service/todos';
-import { Todo } from '../store/todos';
+import { getTodoState, Todo } from '../store/todos';
 import TodoList from './TodoList';
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil';
 import { dateState } from '../store/date';
 
 const TodoLists = (): JSX.Element => {
   const [selectedNum, setSelectedNum] = useState(1);
   const [input, setInput] = useState('');
-  const [todos, setTodos] = useState<Todo[]>([]);
   const [startDate, setStartDate] = useRecoilState(dateState);
+  const getTodos = useRecoilValueLoadable(getTodoState);
+
+  const todos = useMemo(() => {
+    return getTodos?.state === 'hasValue' ? getTodos?.contents : [];
+  }, [getTodos]);
+
   const defaultImage =
     'https://images.unsplash.com/photo-1540350394557-8d14678e7f91?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80';
 
@@ -37,13 +42,13 @@ const TodoLists = (): JSX.Element => {
     setInput(e.target.value);
   };
 
-  useEffect(() => {
-    getTodos(startDate).then((todos) => {
-      if (!todos) return;
-      setTodos(todos);
-    });
-    //TODO: 쓰로틀링이나, 디바운싱 걸어놓기
-  }, [input]);
+  // useEffect(() => {
+  //   getTodos(startDate).then((todos) => {
+  //     if (!todos) return;
+  //     setTodos(todos);
+  //   });
+  //   //TODO: 쓰로틀링이나, 디바운싱 걸어놓기
+  // }, [input]);
 
   return (
     <div className='container shadow-xl mx-auto lg:w-[1200px] bg-orange-200 rounded-lg dark:bg-orange-300 dark:text-gray-600 flex-col p-2'>
@@ -74,7 +79,7 @@ const TodoLists = (): JSX.Element => {
             </button>
           </div>
           <ul>
-            {todos.map((todo: Todo) => (
+            {(todos as Todo[]).map((todo: Todo) => (
               <TodoList key={todo.uuid} todo={todo} />
             ))}
           </ul>
