@@ -3,13 +3,22 @@ import { addTodos, getTodos } from '../service/todos';
 import { Todo } from '../store/todos';
 import TodoList from './TodoList';
 
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { useRecoilState } from 'recoil';
+import { dateState } from '../store/date';
+
 const TodoLists = (): JSX.Element => {
   const [selectedNum, setSelectedNum] = useState(1);
   const [input, setInput] = useState('');
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [startDate, setStartDate] = useRecoilState(dateState);
   const defaultImage =
     'https://images.unsplash.com/photo-1540350394557-8d14678e7f91?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80';
 
+  useEffect(() => {
+    console.log(startDate);
+  }, [startDate]);
   const pageNums = [1];
   // Array.from(
   //   { length: todoLists.taskDays.length },
@@ -19,7 +28,7 @@ const TodoLists = (): JSX.Element => {
   const listNum: number = 10;
 
   const handleSubmit = () => {
-    addTodos(input);
+    addTodos(startDate, input);
     setInput('');
     console.log('add todo');
   };
@@ -29,7 +38,7 @@ const TodoLists = (): JSX.Element => {
   };
 
   useEffect(() => {
-    getTodos().then((todos) => {
+    getTodos(startDate).then((todos) => {
       if (!todos) return;
       setTodos(todos);
     });
@@ -38,9 +47,15 @@ const TodoLists = (): JSX.Element => {
 
   return (
     <div className='container shadow-xl mx-auto lg:w-[1200px] bg-orange-200 rounded-lg dark:bg-orange-300 dark:text-gray-600 flex-col p-2'>
+      <DatePicker
+        selected={startDate}
+        onChange={(date: Date) => setStartDate(date)}
+        className='bg-transparent focus:outline-none cursor-pointer font-serif'
+      />
       <div className='flex'>
         <section className='w-1/2 mx-auto'>
           <h2 className='text-center font-bold text-2xl'>Todolist</h2>
+
           <div>
             <input
               type='text'
