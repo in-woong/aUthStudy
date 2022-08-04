@@ -33,6 +33,15 @@ export interface Todo {
   imgURL: string;
   //taskId는 Todolists의 id와 동일
 }
+
+const replaceItemAtIndex = (
+  arr: Todo[],
+  index: number,
+  newValue: Todo
+): Todo[] => {
+  return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
+};
+
 export const todoState = atom<Todo[]>({
   key: 'todoState',
   default: selector({
@@ -64,6 +73,10 @@ export const addTodoStore = (todos: Todo[], date: string, todo: string) => {
       imgURL: '',
     },
   ];
+};
+
+export const deleteTodoStore = (todos: Todo[], uuid: string) => {
+  return todos.filter((todo) => todo.uuid !== uuid);
 };
 
 // export const getTodoState = selector<Todo[]>({
