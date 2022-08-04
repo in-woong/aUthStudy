@@ -7,10 +7,10 @@ import {
   getDocs,
   setDoc,
 } from 'firebase/firestore';
-import { useRecoilValue } from 'recoil';
+import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { uid } from 'uid';
 import { dateState } from '../store/date';
-import { Todo } from '../store/todos';
+import { addTodoStore, Todo } from '../store/todos';
 import { authService, dbService } from './firebase';
 
 export const getTodos = async (today: Date) => {
@@ -30,13 +30,21 @@ export const getTodos = async (today: Date) => {
   return todos;
 };
 
-export const addTodos = async (today: Date, todo: string) => {
+export const addTodos = async (
+  today: Date,
+  todo: string,
+  todos: Todo[],
+  setTodo: SetterOrUpdater<Todo[]>
+) => {
   const nowDate = `${today.getFullYear()}-${
     today.getMonth() + 1
   }-${today.getDate()}`;
-  console.log(nowDate);
-  if (!authService.currentUser) return;
+
   const uuid = uid();
+  if (!authService.currentUser) return;
+
+  setTodo(addTodoStore(todos, nowDate, todo));
+
   const todoRef = doc(
     dbService,
     `todos/${authService.currentUser.uid}/${nowDate}/`,
@@ -45,7 +53,7 @@ export const addTodos = async (today: Date, todo: string) => {
 
   setDoc(todoRef, {
     todo,
-    createdAt: '2022-07-12',
+    createdAt: nowDate,
     finished: false,
     imgURL: '',
     uuid,
@@ -96,9 +104,7 @@ export const editTodo = async (today: Date, uuid: string, todo: string) => {
   );
 };
 
-export const deleteTodo = async (uuid: string) => {
-  const date = useRecoilValue(dateState);
-  const today = date;
+export const deleteTodo = async (today: Date, uuid: string) => {
   const nowDate = `${today.getFullYear()}-${
     today.getMonth() + 1
   }-${today.getDate()}`;

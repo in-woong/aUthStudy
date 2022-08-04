@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { deleteTodo, editTodo, finishedTodo } from '../service/todos';
 import { dateState } from '../store/date';
-import type { Todo } from '../store/todos';
+import { Todo, todoState } from '../store/todos';
 
 const TodoList = ({ todo }: { todo: Todo }) => {
   const [isDone, setIsDone] = useState(todo.finished);
@@ -25,13 +25,15 @@ const TodoList = ({ todo }: { todo: Todo }) => {
   };
 
   const handleDelete = () => {
-    deleteTodo(todo.uuid);
+    deleteTodo(date, todo.uuid);
   };
+
   const handleSubmit = () => {
     editTodo(date, todo.uuid, input);
     setInput(input);
     setIsEdit(!isEdit);
   };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key == 'Enter') handleSubmit();
   };
