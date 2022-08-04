@@ -1,39 +1,50 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { addTodos, getTodos } from '../service/todos';
-import { getTodoState, Todo } from '../store/todos';
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
+import { addTodos } from '../service/todos';
+import { Todo, todoState } from '../store/todos';
 import TodoList from './TodoList';
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { useRecoilState, useRecoilValue, useRecoilValueLoadable } from 'recoil';
+import {
+  useRecoilState,
+  useRecoilStateLoadable,
+  useRecoilValue,
+  useRecoilValueLoadable,
+  useSetRecoilState,
+} from 'recoil';
 import { dateState } from '../store/date';
+import { uid } from 'uid';
 
 const TodoLists = (): JSX.Element => {
   const [selectedNum, setSelectedNum] = useState(1);
   const [input, setInput] = useState('');
-  const [startDate, setStartDate] = useRecoilState(dateState);
-  const getTodos = useRecoilValueLoadable(getTodoState);
+  const [date, setDate] = useRecoilState(dateState);
+  // const todoLoadable = useRecoilValueLoadable(getTodoState);
+  const setTodo = useSetRecoilState(todoState);
+  // const setTodos = useSetRecoilState(getTodoState);
+  const todoItemLoadable = useRecoilValueLoadable(todoState);
 
   const todos = useMemo(() => {
-    return getTodos?.state === 'hasValue' ? getTodos?.contents : [];
-  }, [getTodos]);
+    return todoItemLoadable?.state === 'hasValue'
+      ? todoItemLoadable?.contents
+      : [];
+  }, [todoItemLoadable]);
+
+  // const todos = useMemo(() => {
+  //   return todoLoadable?.state === 'hasValue' ? todoLoadable?.contents : [];
+  // }, [todoLoadable]);
+
+  // useEffect(() => {
+  //   console.log('todos', todoItems);
+  // }, [todoItems]);
 
   const defaultImage =
     'https://images.unsplash.com/photo-1540350394557-8d14678e7f91?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80';
 
-  useEffect(() => {
-    console.log(startDate);
-  }, [startDate]);
   const pageNums = [1];
-  // Array.from(
-  //   { length: todoLists.taskDays.length },
-  //   (_, idx) => idx + 1
-  // );
-
-  const listNum: number = 10;
 
   const handleSubmit = () => {
-    addTodos(startDate, input);
+    addTodos(date, input, todos, setTodo);
     setInput('');
     console.log('add todo');
   };
@@ -42,19 +53,15 @@ const TodoLists = (): JSX.Element => {
     setInput(e.target.value);
   };
 
-  // useEffect(() => {
-  //   getTodos(startDate).then((todos) => {
-  //     if (!todos) return;
-  //     setTodos(todos);
-  //   });
-  //   //TODO: 쓰로틀링이나, 디바운싱 걸어놓기
-  // }, [input]);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key == 'Enter') handleSubmit();
+  };
 
   return (
     <div className='container shadow-xl mx-auto lg:w-[1200px] bg-orange-200 rounded-lg dark:bg-orange-300 dark:text-gray-600 flex-col p-2'>
       <DatePicker
-        selected={startDate}
-        onChange={(date: Date) => setStartDate(date)}
+        selected={date}
+        onChange={(date: Date) => setDate(date)}
         className='bg-transparent focus:outline-none cursor-pointer font-serif'
       />
       <div className='flex'>
@@ -68,6 +75,7 @@ const TodoLists = (): JSX.Element => {
               placeholder='What will you do?'
               className='lg:w-4/5 w-2/3 ml-4 pl-2 py-1 rounded-lg bg-transparent focus:outline-none border-b-2 border-orange-700'
               onChange={handleChange}
+              onKeyDown={handleKeyDown}
               onSubmit={handleSubmit}
             />
             <button
@@ -78,11 +86,13 @@ const TodoLists = (): JSX.Element => {
               Add
             </button>
           </div>
-          <ul>
-            {(todos as Todo[]).map((todo: Todo) => (
-              <TodoList key={todo.uuid} todo={todo} />
-            ))}
-          </ul>
+          <Suspense fallback={<h1>Loading..</h1>}>
+            <ul>
+              {todos.map((todo: Todo) => (
+                <TodoList key={todo.uuid} todo={todo} />
+              ))}
+            </ul>
+          </Suspense>
         </section>
         <section className='w-1/2'>
           <img
