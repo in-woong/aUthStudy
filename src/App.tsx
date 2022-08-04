@@ -7,29 +7,22 @@ import TodolistView from './views/TodolistView';
 import Login from './Login';
 import me from './service/auth';
 import { RecoilRoot } from 'recoil';
-import { todoState, Todo } from './store/todos';
-import { getTodos } from './service/todos';
 
 function App() {
   const $hamburger = useRef<HTMLInputElement>(null);
   const [isLoggedin, setIsLoggedIn] = useState('');
-  const [value, setValue] = useState<Todo[]>([]);
 
   useEffect(() => {
     //웹 실행 시 최초 1회 해당 함수를 실행시켜 이전 로그인 기록이 있다면 불러옴
     me(setIsLoggedIn);
-    getTodos(new Date()).then((v) => setValue(v as Todo[]));
-    console.log('value', value);
   }, []);
-
-  const initialValue = getTodos(new Date());
   return (
     <div className='App'>
       {!isLoggedin ? (
         <Login />
       ) : (
         <BrowserRouter>
-          <RecoilRoot initializeState={() => Object.assign(todoState, value)}>
+          <RecoilRoot>
             <input
               type='checkbox'
               id='side-menu'

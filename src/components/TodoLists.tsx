@@ -7,21 +7,17 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
   useRecoilState,
-  useRecoilStateLoadable,
-  useRecoilValue,
   useRecoilValueLoadable,
   useSetRecoilState,
 } from 'recoil';
 import { dateState } from '../store/date';
-import { uid } from 'uid';
 
 const TodoLists = (): JSX.Element => {
   const [selectedNum, setSelectedNum] = useState(1);
   const [input, setInput] = useState('');
   const [date, setDate] = useRecoilState(dateState);
-  // const todoLoadable = useRecoilValueLoadable(getTodoState);
   const setTodo = useSetRecoilState(todoState);
-  // const setTodos = useSetRecoilState(getTodoState);
+
   const todoItemLoadable = useRecoilValueLoadable(todoState);
 
   const todos = useMemo(() => {
@@ -29,14 +25,6 @@ const TodoLists = (): JSX.Element => {
       ? todoItemLoadable?.contents
       : [];
   }, [todoItemLoadable]);
-
-  // const todos = useMemo(() => {
-  //   return todoLoadable?.state === 'hasValue' ? todoLoadable?.contents : [];
-  // }, [todoLoadable]);
-
-  // useEffect(() => {
-  //   console.log('todos', todoItems);
-  // }, [todoItems]);
 
   const defaultImage =
     'https://images.unsplash.com/photo-1540350394557-8d14678e7f91?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80';
@@ -46,7 +34,6 @@ const TodoLists = (): JSX.Element => {
   const handleSubmit = () => {
     addTodos(date, input, todos, setTodo);
     setInput('');
-    console.log('add todo');
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

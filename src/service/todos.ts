@@ -10,7 +10,7 @@ import {
 import { SetterOrUpdater, useRecoilValue } from 'recoil';
 import { uid } from 'uid';
 import { dateState } from '../store/date';
-import { addTodoStore, Todo } from '../store/todos';
+import { addTodoStore, deleteTodoStore, Todo } from '../store/todos';
 import { authService, dbService } from './firebase';
 
 export const getTodos = async (today: Date) => {
@@ -104,7 +104,13 @@ export const editTodo = async (today: Date, uuid: string, todo: string) => {
   );
 };
 
-export const deleteTodo = async (today: Date, uuid: string) => {
+export const deleteTodo = async (
+  todos: Todo[],
+  today: Date,
+  uuid: string,
+  setTodo: SetterOrUpdater<Todo[]>
+) => {
+  setTodo(deleteTodoStore(todos, uuid));
   const nowDate = `${today.getFullYear()}-${
     today.getMonth() + 1
   }-${today.getDate()}`;
