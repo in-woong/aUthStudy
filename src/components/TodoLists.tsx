@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useMemo, useState } from 'react';
+import React, { Suspense, useMemo, useState } from 'react';
 import { addTodos } from '../service/todos';
 import { Todo, todoState } from '../store/todos';
 import TodoList from './TodoList';
@@ -24,7 +24,7 @@ const TodoLists = (): JSX.Element => {
     return todoItemLoadable?.state === 'hasValue'
       ? todoItemLoadable?.contents
       : [];
-  }, [todoItemLoadable]);
+  }, [todoItemLoadable, date]);
 
   const defaultImage =
     'https://images.unsplash.com/photo-1540350394557-8d14678e7f91?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80';
@@ -83,7 +83,6 @@ const TodoLists = (): JSX.Element => {
         </section>
         <section className='w-1/2'>
           <img
-            // src={todos[0].imgURL == undefined ? defaultImage : todos[0].imgURL}
             src={defaultImage}
             alt='todoLists Image'
             className='rounded-lg'
