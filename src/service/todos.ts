@@ -1,15 +1,12 @@
-import { onValue, ref, set } from 'firebase/database';
 import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getDocs,
   setDoc,
 } from 'firebase/firestore';
-import { SetterOrUpdater, useRecoilValue } from 'recoil';
+import { SetterOrUpdater } from 'recoil';
 import { uid } from 'uid';
-import { dateState } from '../store/date';
 import { addTodoStore, deleteTodoStore, Todo } from '../store/todos';
 import { authService, dbService } from './firebase';
 
@@ -17,7 +14,6 @@ export const getTodos = async (today: Date) => {
   const nowDate = `${today.getFullYear()}-${
     today.getMonth() + 1
   }-${today.getDate()}`;
-  console.log('getTodos', nowDate);
 
   if (!authService.currentUser) return;
   const todoSnapShot = await getDocs(
@@ -65,7 +61,6 @@ export const finishedTodo = async (
   uuid: string,
   finished: boolean
 ) => {
-  console.log('finished', finished, uuid);
   const nowDate = `${today.getFullYear()}-${
     today.getMonth() + 1
   }-${today.getDate()}`;
@@ -75,6 +70,8 @@ export const finishedTodo = async (
     `todos/${authService.currentUser.uid}/${nowDate}`,
     uuid
   );
+  if (!todoRef) return;
+
   setDoc(
     todoRef,
     {
@@ -85,16 +82,17 @@ export const finishedTodo = async (
 };
 
 export const editTodo = async (today: Date, uuid: string, todo: string) => {
-  console.log('edit', uuid, todo);
   const nowDate = `${today.getFullYear()}-${
     today.getMonth() + 1
   }-${today.getDate()}`;
   if (!authService.currentUser) return;
+
   const todoRef = doc(
     dbService,
     `todos/${authService.currentUser.uid}/${nowDate}`,
     uuid
   );
+
   setDoc(
     todoRef,
     {
@@ -111,10 +109,13 @@ export const deleteTodo = async (
   setTodo: SetterOrUpdater<Todo[]>
 ) => {
   setTodo(deleteTodoStore(todos, uuid));
+
   const nowDate = `${today.getFullYear()}-${
     today.getMonth() + 1
   }-${today.getDate()}`;
+
   if (!authService.currentUser) return;
+
   await deleteDoc(
     doc(dbService, `todos/${authService.currentUser.uid}/${nowDate}`, uuid)
   );

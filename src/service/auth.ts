@@ -11,7 +11,6 @@ type email = string;
 type password = string;
 
 export const signUp = async (email: email, password: password) => {
-  console.log('signup', email, password);
   await createUserWithEmailAndPassword(authService, email, password)
     .then((userCredential) => {
       //signed in
@@ -25,12 +24,10 @@ export const signUp = async (email: email, password: password) => {
 };
 
 export const signIn = async (email: email, password: password) => {
-  console.log('signin', email, password);
   await signInWithEmailAndPassword(authService, email, password)
     .then((userCredential) => {
       //Sign in
       const user = userCredential.user;
-      console.log('signin result', user);
     })
     .catch((error) => {
       const errorCode = error.code;
