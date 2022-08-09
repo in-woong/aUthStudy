@@ -1,24 +1,26 @@
-import React, { Suspense, useMemo, useState } from 'react';
-import { addTodos } from '../service/todos';
-import { Todo, todoState, todoTotal } from '../store/todos';
-
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
+import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import {
   useRecoilState,
-  useRecoilValue,
   useRecoilValueLoadable,
   useSetRecoilState,
 } from 'recoil';
+
+import { addTodos } from '../service/todos';
+import { todoState } from '../store/todos';
+
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 import { dateState } from '../store/date';
+
 import TodoListLoad from './TodoListLoad';
+import PageBtns from './PageBtns';
 
 const TodoLists = (): JSX.Element => {
   const [selectedNum, setSelectedNum] = useState(1);
   const [input, setInput] = useState('');
   const [date, setDate] = useRecoilState(dateState);
   const setTodo = useSetRecoilState(todoState);
-  // const pageNums = useRecoilValue(todoTotal);
 
   const TodoList = React.lazy(() => import('./TodoList'));
   const todoItemLoadable = useRecoilValueLoadable(todoState);
@@ -28,10 +30,22 @@ const TodoLists = (): JSX.Element => {
       : [];
   }, [todoItemLoadable, date]);
 
+  const pageNums = useMemo(() => {
+    let tempTodos =
+      todoItemLoadable?.state === 'hasValue' ? todoItemLoadable?.contents : [];
+    return Array.from(
+      { length: Math.floor(tempTodos.length / 7) + 1 },
+      (_, idx) => idx + 1
+    );
+  }, [todoItemLoadable, date]);
+
+  useEffect(() => {
+    console.log('pageNum', pageNums);
+  }, [pageNums]);
+
   const defaultImage =
     'https://images.unsplash.com/photo-1540350394557-8d14678e7f91?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80';
 
-  // console.log(pageNums, 'fuck');
   const handleSubmit = () => {
     addTodos(date, input, todos, setTodo);
     setInput('');
@@ -86,22 +100,7 @@ const TodoLists = (): JSX.Element => {
           />
         </section>
       </div>
-
-      {/* <ul className='btn-group mx-auto my-3 w-fit h-fit'>
-        {pageNums.map((num) => {
-          if (num == selectedNum)
-            return (
-              <li key={num} className='btn btn-active'>
-                {num}
-              </li>
-            );
-          return (
-            <li key={num} className='btn'>
-              {num}
-            </li>
-          );
-        })}
-      </ul> */}
+      <PageBtns pageNums={pageNums} />
     </div>
   );
 };
