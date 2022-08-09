@@ -1,25 +1,27 @@
 import React, { Suspense, useMemo, useState } from 'react';
 import { addTodos } from '../service/todos';
-import { Todo, todoState } from '../store/todos';
-import TodoList from './TodoList';
+import { Todo, todoState, todoTotal } from '../store/todos';
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
   useRecoilState,
+  useRecoilValue,
   useRecoilValueLoadable,
   useSetRecoilState,
 } from 'recoil';
 import { dateState } from '../store/date';
+import TodoListLoad from './TodoListLoad';
 
 const TodoLists = (): JSX.Element => {
   const [selectedNum, setSelectedNum] = useState(1);
   const [input, setInput] = useState('');
   const [date, setDate] = useRecoilState(dateState);
   const setTodo = useSetRecoilState(todoState);
+  // const pageNums = useRecoilValue(todoTotal);
 
+  const TodoList = React.lazy(() => import('./TodoList'));
   const todoItemLoadable = useRecoilValueLoadable(todoState);
-
   const todos = useMemo(() => {
     return todoItemLoadable?.state === 'hasValue'
       ? todoItemLoadable?.contents
@@ -29,8 +31,7 @@ const TodoLists = (): JSX.Element => {
   const defaultImage =
     'https://images.unsplash.com/photo-1540350394557-8d14678e7f91?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80';
 
-  const pageNums = [1];
-
+  // console.log(pageNums, 'fuck');
   const handleSubmit = () => {
     addTodos(date, input, todos, setTodo);
     setInput('');
@@ -73,12 +74,8 @@ const TodoLists = (): JSX.Element => {
               Add
             </button>
           </div>
-          <Suspense fallback={<h1>Loading..</h1>}>
-            <ul>
-              {todos.map((todo: Todo) => (
-                <TodoList key={todo.uuid} todo={todo} />
-              ))}
-            </ul>
+          <Suspense fallback={<TodoListLoad />}>
+            <TodoList todos={todos} />
           </Suspense>
         </section>
         <section className='w-1/2'>
@@ -90,7 +87,7 @@ const TodoLists = (): JSX.Element => {
         </section>
       </div>
 
-      <ul className='btn-group mx-auto my-3 w-fit h-fit'>
+      {/* <ul className='btn-group mx-auto my-3 w-fit h-fit'>
         {pageNums.map((num) => {
           if (num == selectedNum)
             return (
@@ -104,7 +101,7 @@ const TodoLists = (): JSX.Element => {
             </li>
           );
         })}
-      </ul>
+      </ul> */}
     </div>
   );
 };

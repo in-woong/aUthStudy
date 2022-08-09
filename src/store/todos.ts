@@ -54,11 +54,13 @@ export const todoState = atom<Todo[]>({
   }),
 });
 
-export const todoTotal = selector<number>({
+export const todoTotal = selector<number[]>({
   key: 'todosTotal',
   get: ({ get }) => {
     const todos = get(todoState);
-    return Math.floor(Number(todos) / 10);
+    const pageNum = Math.floor(Number(todos) / 7);
+    const pageArray = Array.from({ length: pageNum }, (_, idx) => idx + 1);
+    return pageArray;
   },
 });
 
