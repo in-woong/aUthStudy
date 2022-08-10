@@ -1,8 +1,8 @@
 const PageBtns = ({ pageNums }: { pageNums: number[] }) => {
   return (
-    <section className='flex justify-center'>
+    <section className='flex justify-center btn-group'>
       {pageNums.map((pageNum) => (
-        <button className='btn btn-ghost' key={pageNum}>
+        <button className='btn' key={pageNum}>
           {pageNum}
         </button>
       ))}
