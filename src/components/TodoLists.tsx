@@ -1,4 +1,11 @@
-import React, { Suspense, useEffect, useMemo, useState } from 'react';
+import React, {
+  MutableRefObject,
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import {
   useRecoilState,
   useRecoilValueLoadable,
@@ -15,12 +22,14 @@ import { dateState } from '../store/date';
 
 import TodoListLoad from './TodoListLoad';
 import PageBtns from './PageBtns';
+import { uploadImage } from '../service/images';
 
 const TodoLists = (): JSX.Element => {
   const [selectedNum, setSelectedNum] = useState(1);
   const [input, setInput] = useState('');
   const [date, setDate] = useRecoilState(dateState);
   const setTodo = useSetRecoilState(todoState);
+  const imageInput = useRef() as React.MutableRefObject<HTMLInputElement>;
 
   const TodoList = React.lazy(() => import('./TodoList'));
   const todoItemLoadable = useRecoilValueLoadable(todoState);
@@ -59,6 +68,17 @@ const TodoLists = (): JSX.Element => {
     if (e.key == 'Enter') handleSubmit();
   };
 
+  const hanldeImageBtn = () => {
+    if (!imageInput) return;
+    imageInput?.current.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    uploadImage(files, date);
+  };
+
   return (
     <div className='container shadow-xl mx-auto lg:w-[1200px] bg-orange-200 rounded-lg dark:bg-orange-300 dark:text-gray-600 flex-col p-2'>
       <DatePicker
@@ -93,6 +113,15 @@ const TodoLists = (): JSX.Element => {
           </Suspense>
         </section>
         <section className='w-1/2'>
+          <input
+            type='file'
+            accept='image/*'
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+            ref={imageInput}
+            className='btn'
+          />
+          <button onClick={hanldeImageBtn}>이미지업로드</button>
           <img
             src={defaultImage}
             alt='todoLists Image'
