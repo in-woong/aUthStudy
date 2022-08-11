@@ -21,6 +21,7 @@ export const getTodos = async (today: Date) => {
   );
   let todos: Todo[] = [];
   todoSnapShot.forEach((doc) => {
+    if (doc.data().imageURL) return;
     todos = [...todos, doc.data() as Todo];
   });
   return todos;
