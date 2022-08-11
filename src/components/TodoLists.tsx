@@ -22,14 +22,13 @@ import { dateState } from '../store/date';
 
 import TodoListLoad from './TodoListLoad';
 import PageBtns from './PageBtns';
-import { uploadImage } from '../service/images';
+import TodoImage from './TodoImage';
 
 const TodoLists = (): JSX.Element => {
   const [selectedNum, setSelectedNum] = useState(1);
   const [input, setInput] = useState('');
   const [date, setDate] = useRecoilState(dateState);
   const setTodo = useSetRecoilState(todoState);
-  const imageInput = useRef() as React.MutableRefObject<HTMLInputElement>;
 
   const TodoList = React.lazy(() => import('./TodoList'));
   const todoItemLoadable = useRecoilValueLoadable(todoState);
@@ -48,13 +47,6 @@ const TodoLists = (): JSX.Element => {
     );
   }, [todoItemLoadable, date]);
 
-  useEffect(() => {
-    console.log('pageNum', pageNums);
-  }, [pageNums]);
-
-  const defaultImage =
-    'https://images.unsplash.com/photo-1540350394557-8d14678e7f91?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80';
-
   const handleSubmit = () => {
     addTodos(date, input, todos, setTodo);
     setInput('');
@@ -66,17 +58,6 @@ const TodoLists = (): JSX.Element => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key == 'Enter') handleSubmit();
-  };
-
-  const hanldeImageBtn = () => {
-    if (!imageInput) return;
-    imageInput?.current.click();
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-    uploadImage(files, date);
   };
 
   return (
@@ -112,22 +93,7 @@ const TodoLists = (): JSX.Element => {
             <TodoList todos={todos} />
           </Suspense>
         </section>
-        <section className='w-1/2'>
-          <input
-            type='file'
-            accept='image/*'
-            style={{ display: 'none' }}
-            onChange={handleFileChange}
-            ref={imageInput}
-            className='btn'
-          />
-          <button onClick={hanldeImageBtn}>이미지업로드</button>
-          <img
-            src={defaultImage}
-            alt='todoLists Image'
-            className='rounded-lg'
-          />
-        </section>
+        <TodoImage date={date} />
       </div>
       <PageBtns pageNums={pageNums} />
     </div>
